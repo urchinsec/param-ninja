@@ -1,0 +1,78 @@
+<!-- <header></header>
+<H1>Hack the world!</H1>
+<form action="check">
+  <input type="text" name="url_to_check"/>
+  <input type="button">Submit</input>
+</form> -->
+
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <h1 class="text-center col-12">Hack the world</h1>
+    </div>
+    <div>
+      <form class="form" action="check" method="post">
+        <div class="form-group row">
+          <div class="col-sm-10">
+            {% if check_result %}
+              {% set url = check_result["checked_url"] %}
+            {% else %}
+              {% set url = "" %}
+            {% endif %}
+            <input type="text" class="form-control" placeholder="URL" name="url" value={{ url }}>
+          </div>
+          <button type="button" class="btn btn-success col-sm-2" onclick="submit()">Check</button>
+        </div>
+      </form>
+      <div>
+        {% if check_result %}
+          <label>Result</label>
+          <table class="table table-stripped">
+            <thead>
+              <tr>
+                <th>Test</th>
+                <th>Result</th>
+              </tr>              
+            </thead>
+            <tbody>
+              <tr>
+                <td>[1] Scan for technologies used</td>
+                <td class="text-danger">{{ check_result["technology"]}}</td>
+              </tr>
+              <tr>
+                <td>[2] Scan for vulnerabilities if available on the technology used on the api</td>
+                <td class="text-danger">{{ check_result["vuln"]}}</td>
+              </tr>
+              <tr>
+                <td>[3] Scan for Server Version and vulnerability</td>
+                <td class="text-danger">{{ check_result["server_version"]}}</td>
+              </tr>
+              <tr>
+                <td>[4] Automate Request Tampering (HTTP) for JSON ( REST API - BASED)</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>[5] Automate Exploitation if any vulnerability found on the technologies used</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>[6] Suggest Possible Mitigations</td>
+                <td></td>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
