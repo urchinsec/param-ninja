@@ -1,5 +1,5 @@
 <!-- <header></header>
-<H1>Hack the world!</H1>
+<H1>API NINJA</H1>
 <form action="check">
   <input type="text" name="url_to_check"/>
   <input type="button">Submit</input>
@@ -45,27 +45,27 @@
             </thead>
             <tbody>
               <tr>
-                <td>[1] Scan for technologies used</td>
+                <td>[1] Technologies Used</td>
                 <td class="text-danger">{{ check_result["technology"]}}</td>
               </tr>
               <tr>
-                <td>[2] Scan for vulnerabilities if available on the technology used on the api</td>
+                <td>[2] Vulnerabilties Spotted</td>
                 <td class="text-danger">{{ check_result["vuln"]}}</td>
               </tr>
               <tr>
-                <td>[3] Scan for Server Version and vulnerability</td>
+                <td>[3] Server Version</td>
                 <td class="text-danger">{{ check_result["server_version"]}}</td>
               </tr>
               <tr>
-                <td>[4] Automate Request Tampering (HTTP) for JSON ( REST API - BASED)</td>
+                <td>[4] Request Tampering</td>
                 <td></td>
               </tr>
               <tr>
-                <td>[5] Automate Exploitation if any vulnerability found on the technologies used</td>
+                <td>[5] Exploitation Information</td>
                 <td></td>
               </tr>
               <tr>
-                <td>[6] Suggest Possible Mitigations</td>
+                <td>[6] Mitigation</td>
                 <td></td>
               </td>
               </tr>
