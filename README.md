@@ -28,9 +28,9 @@ We can go to `/output` endpoint and take alook at the exploit information about 
 ![outputapi](https://user-images.githubusercontent.com/49201347/154809562-663e2e56-5a13-416f-806d-59207f77dfe9.png)
 
 ## API-NINJA V2
-[1] Supports REST-API Penetration Testing
-[2] A portal to access all reports
-[3] More Vulnerability Testing Functionalities
+1. Supports REST-API Penetration Testing
+2. A portal to access all reports
+3. More Vulnerability Testing Functionalities
 
 ## CONTACTS::
 1. urchinsec@protonmail.com
