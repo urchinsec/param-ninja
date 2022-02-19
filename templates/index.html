@@ -1,10 +1,29 @@
+<!-- <header></header>
+<H1>API NINJA</H1>
+<form action="check">
+  <input type="text" name="url_to_check"/>
+  <input type="button">Submit</input>
+</form> -->
+
 {% extends "bootstrap/base.html" %}
-{% block title %}API NINJA{% endblock %}
+{% block title %}API-NINJA{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
 
 {% block content %}
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Inconsolata:400,400i,700");
+    .container, td{
+      font-family: 'Inconsolata', sans-serif;
+    }
+  </style>
   <div class="container">
     <div class="row">
-      <h1 class="text-center col-12">API NINJA</h1>
+      <h1 class="text-center col-12">API Ninja</h1>
     </div>
     <div>
       <form class="form" action="check" method="post">
@@ -15,9 +34,9 @@
             {% else %}
               {% set url = "" %}
             {% endif %}
-            <input type="text" class="form-control" placeholder="URL" name="url" value={{ url }}>
+            <input type="text" class="form-control" placeholder="http://api.something.com/endpoint?id=1" name="url" value={{ url }}>
           </div>
-          <button type="button" class="btn btn-success col-sm-2" onclick="submit()">Check</button>
+          <button type="button" class="btn btn-success col-sm-2" onclick="submit()">SCAN</button>
         </div>
       </form>
       <div>
@@ -36,7 +55,7 @@
                 <td class="text-danger">{{ check_result["technology"]}}</td>
               </tr>
               <tr>
-                <td>[2] Vulnerabilties Spotted</td>
+                <td>[2] Vulnerability Spotted</td>
                 <td class="text-danger">{{ check_result["vuln"]}}</td>
               </tr>
               <tr>
@@ -45,15 +64,16 @@
               </tr>
               <tr>
                 <td>[4] Request Tampering</td>
-                <td></td>
+                <td class="text-danger">{{ check_result["request_tamp"]}}</td>
               </tr>
               <tr>
-                <td>[5] Exploitation Information</td>
+                <td>[5] Exploit Information</td>
+                <td class="text-danger">{{ check_result["exploit_info"]}}</td>
                 <td></td>
               </tr>
               <tr>
                 <td>[6] Mitigation</td>
-                <td></td>
+                <td class="text-danger">{{ check_result["mitigation_info"]}}</td>
               </td>
               </tr>
             </tbody>
