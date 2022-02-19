@@ -46,7 +46,7 @@ class Scanner:
         headers = req.headers
         server = headers["Server"]
         
-        VKey = "AE4E6ISN5JIV4EX0E0MGJRFXLKAQ3BNNP8W20L3IFHT7EOZXD5ZPI5P4QOCP5YP2"
+        VKey = "" # get api key by going to https://vulners.com
         VApi = vulners.Vulners(api_key=VKey)
 
         search = VApi.searchExploit(server)
