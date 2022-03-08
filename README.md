@@ -16,6 +16,13 @@ SECRET_KEY = 'somesecretgoesherepewpew333'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 ```
 
+Visit https://vulners.com/ and generate an API key and then add it in `Scanner.py`
+
+```python3
+VKey = "[KEYHERE]"
+VApi = vulners.Vulners(api_key=VKey)
+```
+
 ## USAGE
 Now to finally run it up :
 
