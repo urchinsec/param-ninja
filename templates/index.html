@@ -3,24 +3,36 @@
 
 {% block content %}
   <div class="container">
-    <div class="row">
-      <h1 class="text-center col-12">API NINJA</h1>
+    <div class="row" style="margin-top: 10px;">
+      <div class="col-sm-2">
+        User: {{ current_user.name }}
+      </div>
+      <div class="col-sm-8">
+        <h1 class="text-center">API NINJA</h1>
+      </div>
+      <div class="col-sm-2 text-right">
+        <a class="btn btn-warning" href="/logout">Logout</a>
+      </div>
     </div>
-    <div>
-      <form class="form" action="check" method="post">
-        <div class="form-group row">
-          <div class="col-sm-10">
-            {% if check_result %}
-              {% set url = check_result["checked_url"] %}
-            {% else %}
-              {% set url = "" %}
-            {% endif %}
-            <input type="text" class="form-control" placeholder="URL" name="url" value={{ url }}>
+    <div class="">
+      <div class="">
+        <form class="form" action="check" method="post">
+          <div class="row">
+            <div class="col-sm-10">
+              {% if check_result %}
+                {% set url = check_result["checked_url"] %}
+              {% else %}
+                {% set url = "" %}
+              {% endif %}
+              <input type="text" class="form-control" placeholder="URL" name="url" value={{ url }}>
+            </div>
+            <div class="col-sm-2">              
+              <button type="button" class="btn btn-success btn-block" onclick="submit()">Check</button>
+            </div>
           </div>
-          <button type="button" class="btn btn-success col-sm-2" onclick="submit()">Check</button>
-        </div>
-      </form>
-      <div>
+        </form>
+      </div>
+      <div class="col-sm-12">
         {% if check_result %}
           <label>Result</label>
           <table class="table table-stripped">
