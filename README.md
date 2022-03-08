@@ -8,7 +8,7 @@ pip3 install -r requirements.txt
 ```
 This should install all the requirements required to fully function.
 
-#### Configuration
+#### Configuration::
 You need to create a `config` file and put in your secret key and SQLAlchemy URL as an example:
 
 ```
@@ -40,6 +40,12 @@ Now in the main page you can put in a URL with an endpoint that you want to test
 
 ![Main_Param_Ninja](https://user-images.githubusercontent.com/49201347/157233470-860bd9bc-173e-40d4-b498-dd801acac8a0.png)
 
+This is an example of scanning `https://api.github.com/users` but it's  best you put something with an endpoint and parameter , since this is a parameter tester :) , As seen below are the output:
+
+![Scanned](https://user-images.githubusercontent.com/49201347/157249666-b6e0add1-ef2f-4f2e-ba9f-c9b55e862ee7.png)
+
+## WHAT'S MORE?
+You can visit `/output` to check the output of possible exploits found from exploit-db
 
 ## CONTACTS::
 1. urchinsec@protonmail.com
