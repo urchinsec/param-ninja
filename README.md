@@ -1,4 +1,4 @@
-# API-NINJA V1
+# PARAM-NINJA
 An automated penetration testing tool , that automates web vulnerabilities testing upon a URL given with a parameter
 
 ## Installation
