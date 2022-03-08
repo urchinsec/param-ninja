@@ -7,7 +7,7 @@ import os
 
 class Scanner:
     def __init__(self, params):
-        self.params = params        
+        self.params = params
 
     def full_scan(self, url):
         return {
@@ -26,14 +26,17 @@ class Scanner:
         res = wappalyzer.analyze_with_versions_and_categories(webpage)
 
         return res
-    
+
     def scan_for_vuln(self, url):
         test1 = Scanner.test_xss(url)
         test2 = Scanner.test_ssti(url)
         test3 = Scanner.test_htmli(url)
+        test4 = Scanner.test_sqli(url)
+        test5 = Scanner.test_lfi(url)
+        test6 = Scanner.test_cmdi(url)
 
-        return f"{test1} , {test2} , {test3}"
-  
+        return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}"
+
     def scan_for_server_version(self, url):
         req = requests.get(url)
         headers = req.headers
@@ -42,13 +45,13 @@ class Scanner:
         return server
 
     def request_tamp(self, url):
-        return "Not Spotted"
+        return "Soon To Be Updated"
 
     def exploit_info(self,url):
         req = requests.get(url)
         headers = req.headers
         server = headers["Server"]
-        
+
         VKey = self.params["v_key"] # get api key by going to https://vulners.com
         VApi = vulners.Vulners(api_key=VKey)
 
@@ -65,10 +68,10 @@ class Scanner:
         payloadxss = "<script>document.write('xss');</script>"
         payloadssti = "{{7*7}}"
         payloadhtmli = "<h1>htmlinjection</h1>"
-        
-        reqxss = requests.get(f"{url}{payloadxss}")
-        reqssti = requests.get(f"{url}{payloadssti}")
-        reqhtmli = requests.get(f"{url}{payloadhtmli}")
+
+        reqxss = requests.get(f"{url}{payloadxss}",verify=False)
+        reqssti = requests.get(f"{url}{payloadssti}",verify=False)
+        reqhtmli = requests.get(f"{url}{payloadhtmli}",verify=False)
 
         if "xss" in reqxss.text and "49" in reqssti.text and "htmlinjection" in reqhtmli.text:
             return "SSTI,XSS, and HTMLinjection available can be prevented by reviewing the code and sanitizing the inputs"
@@ -78,8 +81,8 @@ class Scanner:
     def test_ssti(url):
         payload = "{{7*7}}"
         fattempt = f"{url}{payload}"
-        req = requests.get(fattempt)
-        print(req.text)
+        req = requests.get(fattempt,verify=False)
+        #print(req.text)
         if req.status_code == 200:
             if "49" in req.text:
                 return "SSTI(Server Side Template Injection)"
@@ -90,10 +93,10 @@ class Scanner:
 
     def test_xss(url):
         fattempt = f"{url}<script>document.write('xss');</script>"
-        req = requests.get(fattempt)
+        req = requests.get(fattempt,verify=False)
         if req.status_code == 200:
             if "xss" in req.text:
-                print(req.text)
+                #print(req.text)
                 return "XSS(Reflective)"
             else:
                 return ""
@@ -102,12 +105,76 @@ class Scanner:
 
     def test_htmli(url):
         fattempt = f"{url}<h1 align='center' style='color:red;'>htmlinjection</h1>"
-        req = requests.get(fattempt)
+        req = requests.get(fattempt,verify=False)
         if req.status_code == 200:
             if "htmlinjection" in req.text:
-                print(req.text)
+                #print(req.text)
                 return "HTML INJECTION"
             else:
                 return ""
         else:
             return ""
+
+    def test_sqli(url):
+        payload = "' or 1=1 "
+        fattempt = f"{url}{payload}"
+        req = requests.get(fattempt,verify=False)
+        if req.status_code == 200:
+            if 'error' in req.text or 'SQL' in req.text or 'syntax' in req.text:
+                #print(req.text)
+                return "SQL INJECTION"
+            else:
+                return ""
+        else:
+            return ""
+    """
+    def test_lfi(url):
+        payload1 = "../../../../../../../../../../../../etc/passwd"
+        payload2 = "..//..//..//..//..//..//..//..//..//../etc/passwd"
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+
+        req1 = requests.get(fattempt)
+        req2 = requests.get(sattempt)
+
+        if req1.status_code == 200 and req2.status_code == 200:
+            if "home/"in req1.text or "home/" in req2.status_code:
+                return "LFI(Local File Inclusion)"
+            else:
+                return ""
+        else:
+            return ""
+    """
+
+    def test_cmdi(url):
+        payload1 = "; echo 'aGVsbG8K'|base64 -d;"
+        payload2 = "\necho 'aGVsbG8K'|base64 -d;"
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+
+        req1 = requests.get(fattempt,verify=False)
+        req2 = requests.get(sattempt,verify=False)
+
+        if req1.status_code == 200 and req2.status_code == 200:
+            if 'hello' in req1.text or 'hello' in req2.text:
+                return "OS Command Injection"
+            else:
+                return ""
+        else:
+            return ""
+
+    def test_lfi(url):
+        payload = "../../../../../../../../../../etc/passwd"
+        fattempt = f"{url}{payload}"
+        req = requests.get(fattempt,verify=False)
+        #print(req.text)
+        if req.status_code == 200:
+            if 'root' in req.text:
+                return "LFI(Local File Inclusion)"
+            else:
+                return ""
+        else:
+            if 'root:x:' in req.text:
+                return "LFI(Local File Inclusion)"
+            else:
+                return ""
