@@ -1,5 +1,5 @@
 # API-NINJA V1
-An automated penetration testing tool , that will help perform a basic enumeration upon a given API endpoint!
+An automated penetration testing tool , that automates web vulnerabilities testing upon a URL given with a parameter
 
 ## Installation
 ### Requirements::
