@@ -48,7 +48,9 @@ This is an example of scanning `https://api.github.com/users` but it's  best you
 You can visit `/output` to check the output of possible exploits found from exploit-db.
 
 **FUNCTIONALITIES::**
+
 Below are the vulnerabilities that can be tested currently:
+
 1. XSS (Cross Site Scripting)
 2. HTML injection
 3. SSTI (Server Side Template Injection)
