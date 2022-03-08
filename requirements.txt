@@ -1,6 +1,7 @@
 flask
 flask_bootstrap
 vulners
-Wappalyzer
+python-wappalyzer
+python3-wappalyzer
 flask_sqlalchemy
 flask_login
