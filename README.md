@@ -45,8 +45,22 @@ This is an example of scanning `https://api.github.com/users` but it's  best you
 ![Scanned](https://user-images.githubusercontent.com/49201347/157249666-b6e0add1-ef2f-4f2e-ba9f-c9b55e862ee7.png)
 
 ## WHAT'S MORE?
-You can visit `/output` to check the output of possible exploits found from exploit-db
+You can visit `/output` to check the output of possible exploits found from exploit-db.
+
+*** FUNCTIONALITIES:: ***
+Below are the vulnerabilities that can be tested currently:
+1. XSS (Cross Site Scripting)
+2. HTML injection
+3. SSTI (Server Side Template Injection)
+4. OS Command Injection
+5. LFI (Local File Inclusion)
+6. SQL injection
+
+More Vulnerability testing functions will be added soon:)
 
 ## CONTACTS::
 1. urchinsec@protonmail.com
 2. https://discord.gg/red66VCSEp
+3. tahacodez@gmail.com
+4. bug.fetcher@gmail.com
+5. [tahaafarooq](https://twitter.com/tahaafarooq)
