@@ -6,6 +6,9 @@ import json
 import os
 
 class Scanner:
+    def __init__(self, params):
+        self.params = params        
+
     def full_scan(self, url):
         return {
             "checked_url": url,
@@ -46,7 +49,7 @@ class Scanner:
         headers = req.headers
         server = headers["Server"]
         
-        VKey = "" # get api key by going to https://vulners.com
+        VKey = self.params["v_key"] # get api key by going to https://vulners.com
         VApi = vulners.Vulners(api_key=VKey)
 
         search = VApi.searchExploit(server)

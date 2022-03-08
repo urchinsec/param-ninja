@@ -32,7 +32,8 @@ if __name__ == "__main__":
     app.register_blueprint(auth_blueprint)
 
     # blueprint for non-auth parts of app
-    from main import main as main_blueprint
+    from main import build_main_blueprint
+    main_blueprint = build_main_blueprint(app)
     app.register_blueprint(main_blueprint)
     
     app.debug = True
