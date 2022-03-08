@@ -1,36 +1,37 @@
-# API-NINJA V1
-An automated penetration testing tool , that will help perform a basic enumeration upon a given API endpoint!
+# PARAM-NINJA
+An automated penetration testing tool , that automates web vulnerabilities testing upon a URL given with a parameter
 
-## Installation
-### Requirements::
+## INSTALLATION
+#### Requirements::
 ```
 pip3 install -r requirements.txt
 ```
 This should install all the requirements required to fully function.
 
-## Usage
-### Flask Web Server::
+#### Configuration
+You need to create a `config` file and put in your secret key and SQLAlchemy URL as an example:
+
 ```
-python3 app.py
+SECRET_KEY = 'somesecretgoesherepewpew333'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 ```
-This should start the web server, Access it from your browser by requesting `http://127.0.0.1:5000/`
-It should look something like this:
 
-![api-ninja](https://user-images.githubusercontent.com/49201347/154808834-ec994fbf-79ad-458f-8e15-9a6a0eec5c43.png)
+## USAGE
+Now to finally run it up :
 
-### Scanning::
-Now For the testing part , you shall input an api url with an endpoint attached to it, click scan , and it'll do the magic.
+```
+python3 starter.py
+```
 
-![api-nina-work](https://user-images.githubusercontent.com/49201347/154809477-33048b93-dfb0-4cd7-a066-39cad7833117.png)
+And the it will start the flask web server , then you can access it from the web by visiting `http://localhost:5000/`
+then you will need to log in , where the default creds `admin:admin`:
 
-We can go to `/output` endpoint and take alook at the exploit information about the server and we will get to see vulnerabilities upon the server version and all those things listed as seen below:
+![Login_Param_Ninja](https://user-images.githubusercontent.com/49201347/157232948-2703c2ff-94b6-403a-ab45-d622bf4d2238.png)
 
-![outputapi](https://user-images.githubusercontent.com/49201347/154809562-663e2e56-5a13-416f-806d-59207f77dfe9.png)
+Now in the main page you can put in a URL with an endpoint that you want to test , and then click on scan and it'll perform the magic.
 
-## API-NINJA V2
-1. Supports REST-API Penetration Testing
-2. A portal to access all reports
-3. More Vulnerability Testing Functionalities
+![Main_Param_Ninja](https://user-images.githubusercontent.com/49201347/157233470-860bd9bc-173e-40d4-b498-dd801acac8a0.png)
+
 
 ## CONTACTS::
 1. urchinsec@protonmail.com

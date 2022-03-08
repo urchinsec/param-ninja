@@ -1,7 +1,13 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}API NINJA - Login{% endblock %}
+{% block title %}PARAM NINJA - Login{% endblock %}
 
 {% block content %}
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Inconsolata:400,400i,700");
+    .container, td{
+      font-family: 'Inconsolata', sans-serif;
+    }
+  </style>
   <h1 class="text-center">Login</h1>
   <div class="container">
     <div class="row">
@@ -21,10 +27,10 @@
     <div class="row">
       <form class="form" action="login" method="post">
         <div class="form-group">
-          <label>User name:</label>
+          <label>Username:</label>
           <input class="form-control" type="text" name="email">
         </div>
-        
+
         <div class="form-group">
           <label>Password:</label>
           <input class="form-control" type="password" name="password">
