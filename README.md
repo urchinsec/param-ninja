@@ -69,5 +69,5 @@ More Vulnerability testing functions will be added soon:)
 1. urchinsec@protonmail.com
 2. tahacodez@gmail.com
 3. bug.fetcher@gmail.com
-4. [tahaafarooq](https://twitter.com/tahaafarooq)5
+4. [tahaafarooq](https://twitter.com/tahaafarooq)
 5. [DmitryMineev](https://twitter.com/Dmitry_Mineev)
