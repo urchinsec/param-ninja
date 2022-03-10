@@ -1,0 +1,28 @@
+{% block menu %}
+<nav class="navbar navbar-expand navbar-light">
+  <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+    <label class="m-3">PARAM NINJA</label>
+
+    {% if current_page != 'login' %}
+    <ul class="navbar-nav nav-tabs mr-auto">
+      <li class="nav-item">
+        <a class="nav-link {{'active' if current_page == 'index' }}" href="/">Main</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{'active' if current_page == 'profile' }}" href="/profile">Profile</a>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="navbar-collapse collapse order-3 dual-collapse2">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+</nav>
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from flask_login import login_required, current_user
+from flask_login import login_required
 from scanner import Scanner
 
 def build_main_blueprint(app):
@@ -13,7 +13,7 @@ def build_main_blueprint(app):
     @main.route('/')
     @login_required
     def index():
-        return render_template("index.html", current_user = current_user)
+        return render_template("index.html")
 
     @main.route("/check", methods = ["POST"])
     @login_required
@@ -21,6 +21,7 @@ def build_main_blueprint(app):
         check_result = scanner.full_scan(request.form["url"])
 
         return render_template("index.html", check_result=check_result)
+
 
     @main.route("/output", methods=["GET"])
     @login_required

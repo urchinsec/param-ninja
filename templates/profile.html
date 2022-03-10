@@ -1,0 +1,35 @@
+{% set page_title = 'Profile' %}
+{% set current_page = 'profile' %}
+
+{% extends 'layout.html' %}
+
+{% block content %}
+  {% include "alert.html" %}
+  <div class="row justify-content-md-center">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-auto">
+      <form class="form" action="profile" method="POST">
+        <input type="hidden" name="_method" value="patch" />
+        <div class="form-group">
+          <label>Username:</label>
+          <input class="form-control" type="text" name="email" value="{{current_user.email}}">
+        </div>
+
+        <div class="form-group">
+          <label>Old password:</label>
+          <input class="form-control" type="password" name="old_password">
+        </div>
+
+        <div class="form-group">
+          <label>New password:</label>
+          <input class="form-control" type="password" name="new_password">
+        </div>
+
+        <div class="col-12 btn-group mt-3">
+          <button type="button" class="btn btn-success btn-block" onclick="submit()">Update</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-1"></div>
+  </div>
+{% endblock %}

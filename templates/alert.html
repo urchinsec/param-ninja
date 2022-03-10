@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-12">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            {% set alert_class = 'success' %}
+          {% elif category == 'error' %}
+            {% set alert_class = 'danger' %}
+          {% endif %}
+          <div class="alert alert-{{alert_class}} alert-dismissible show text-center" role="alert">{{message}}</div>
+          {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>

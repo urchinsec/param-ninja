@@ -2,3 +2,4 @@ config
 *.pyc
 __pycache__/*
 .vscode/launch.json
+db.sqlite

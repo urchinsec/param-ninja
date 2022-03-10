@@ -1,90 +1,67 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}PARAM-NINJA{% endblock %}
+{% set page_title = 'main' %}
+{% set current_page = 'index' %}
 
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <!-- ... -->
-</div>
-{% endblock %}
+{% extends "layout.html" %}
 
 {% block content %}
-  <style>
-    @import url("https://fonts.googleapis.com/css?family=Inconsolata:400,400i,700");
-    .container, td{
-      font-family: 'Inconsolata', sans-serif;
-    }
-  </style>
-  <div class="container">
-    <div class="row" style="margin-top: 10px;">
-      <div class="col-sm-2">
-        User: {{ current_user.name }}
-      </div>
-      <div class="col-sm-8">
-        <h1 class="text-center">PARAM NINJA</h1>
-      </div>
-      <div class="col-sm-2 text-right">
-        <a class="btn btn-warning" href="/logout">Logout</a>
-      </div>
-    </div>
-    <div class="">
-      <div class="">
-        <form class="form" action="check" method="post">
-          <div class="row">
-            <div class="col-sm-10">
-              {% if check_result %}
-                {% set url = check_result["checked_url"] %}
-              {% else %}
-                {% set url = "" %}
-              {% endif %}
-              <input type="text" class="form-control" placeholder="https://something.com/page?param=val" name="url" value={{ url }}>
-            </div>
-            <div class="col-sm-2">              
-              <button type="button" class="btn btn-success btn-block" onclick="submit()">SCAN</button>
-            </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form class="form" action="check" method="post">
+        <div class="row">
+          <div class="col-sm-10">
+            {% if check_result %}
+              {% set url = check_result["checked_url"] %}
+            {% else %}
+              {% set url = "" %}
+            {% endif %}
+            <input type="text" class="form-control" placeholder="https://something.com/page?param=val" name="url" value={{ url }}>
           </div>
-        </form>
-      </div>
-      <div class="col-sm-12">
-        {% if check_result %}
-          <label>Result</label>
-          <table class="table table-stripped">
-            <thead>
-              <tr>
-                <th>Test</th>
-                <th>Result</th>
-              </tr>              
-            </thead>
-            <tbody>
-              <tr>
-                <td>[1] Technologies Used</td>
-                <td class="text-danger">{{ check_result["technology"]}}</td>
-              </tr>
-              <tr>
-                <td>[2] Vulnerability Spotted</td>
-                <td class="text-danger">{{ check_result["vuln"]}}</td>
-              </tr>
-              <tr>
-                <td>[3] Server Version</td>
-                <td class="text-danger">{{ check_result["server_version"]}}</td>
-              </tr>
-              <tr>
-                <td>[4] Request Tampering</td>
-                <td class="text-danger">{{ check_result["request_tamp"]}}</td>
-              </tr>
-              <tr>
-                <td>[5] Exploit Information</td>
-                <td class="text-danger">{{ check_result["exploit_info"]}}</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>[6] Mitigation</td>
-                <td class="text-danger">{{ check_result["mitigation_info"]}}</td>
-              </td>
-              </tr>
-            </tbody>
-          </table>
-        {% endif %}
-      </div>
+          <div class="col-sm-2 btn-group">              
+            <button type="button" class="btn btn-success btn-block" onclick="submit()">SCAN</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-12">
+      {% if check_result %}
+        <label>Result</label>
+        <table class="table table-stripped">
+          <thead>
+            <tr>
+              <th>Test</th>
+              <th>Result</th>
+            </tr>              
+          </thead>
+          <tbody>
+            <tr>
+              <td>[1] Technologies Used</td>
+              <td class="text-danger">{{ check_result["technology"]}}</td>
+            </tr>
+            <tr>
+              <td>[2] Vulnerability Spotted</td>
+              <td class="text-danger">{{ check_result["vuln"]}}</td>
+            </tr>
+            <tr>
+              <td>[3] Server Version</td>
+              <td class="text-danger">{{ check_result["server_version"]}}</td>
+            </tr>
+            <tr>
+              <td>[4] Request Tampering</td>
+              <td class="text-danger">{{ check_result["request_tamp"]}}</td>
+            </tr>
+            <tr>
+              <td>[5] Exploit Information</td>
+              <td class="text-danger">{{ check_result["exploit_info"]}}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>[6] Mitigation</td>
+              <td class="text-danger">{{ check_result["mitigation_info"]}}</td>
+            </td>
+            </tr>
+          </tbody>
+        </table>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
