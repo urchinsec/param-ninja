@@ -53,7 +53,7 @@ class Scanner:
 
         server = headers["Server"]
 
-        if server != '':
+        if server == '':
             return "No Server Version Found! Or Type!"
         else:
             VKey = self.params["v_key"] # get api key by going to https://vulners.com
