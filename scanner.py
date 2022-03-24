@@ -50,19 +50,23 @@ class Scanner:
     def exploit_info(self,url):
         req = requests.get(url)
         headers = req.headers
+
         server = headers["Server"]
 
-        VKey = self.params["v_key"] # get api key by going to https://vulners.com
-        VApi = vulners.Vulners(api_key=VKey)
+        if server != '':
+            return "No Server Version Found! Or Type!"
+        else:
+            VKey = self.params["v_key"] # get api key by going to https://vulners.com
+            VApi = vulners.Vulners(api_key=VKey)
 
-        search = VApi.searchExploit(server)
-        search = json.dumps(search,indent=2)
+            search = VApi.searchExploit(server)
+            search = json.dumps(search,indent=2)
 
-        os.system(f"touch output_exploit_search.json")
-        with open(f"output_exploit_search.json","w") as exploitResult:
-            exploitResult.writelines(search)
+            os.system(f"touch output_exploit_search.json")
+            with open(f"output_exploit_search.json","w") as exploitResult:
+                exploitResult.writelines(search)
 
-        return f"Result Written To output_exploit_search.json, Access by visiting `/output`"
+            return f"Result Written To output_exploit_search.json, Access by visiting `/output`"
 
     def mitigation_info(self, url):
         payloadxss = "<script>document.write('xss');</script>"
@@ -97,7 +101,7 @@ class Scanner:
         if req.status_code == 200:
             if "xss" in req.text:
                 #print(req.text)
-                return "XSS(Reflective)"
+                return "XSS"
             else:
                 return ""
         else:
