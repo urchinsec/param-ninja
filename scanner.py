@@ -1,7 +1,9 @@
 from Wappalyzer import Wappalyzer, WebPage
+from urllib.parse import urlparse
 import requests
 import vulners
 import base64
+import socket
 import json
 import os
 
@@ -15,6 +17,7 @@ class Scanner:
             "technology": self.scan_for_technologies(url),
             "vuln": self.scan_for_vuln(url),
             "server_version": self.scan_for_server_version(url),
+            "domain_information": self.domain_information(url),
             "request_tamp": self.request_tamp(url),
             "exploit_info": self.exploit_info(url),
             "mitigation_info": self.mitigation_info(url)
@@ -26,6 +29,19 @@ class Scanner:
         res = wappalyzer.analyze_with_versions_and_categories(webpage)
 
         return res
+
+    def domain_information(self,url):
+        domain = urlparse(url).netloc
+        ip = socket.gethostbyname(domain)
+        IP_INFO_API = "bd9a656f7652f9"
+        host = f"https://ipinfo.io/{ip}?token={IP_INFO_API}"
+        headers = {
+            'Content-Type':'application/json'
+        }
+        req = requests.get(host,headers=headers)
+        info = json.dumps(req.json())
+
+        return info
 
     def scan_for_vuln(self, url):
         test1 = Scanner.test_xss(url)
@@ -152,7 +168,7 @@ class Scanner:
         fattempt = f"{url}{payload}"
         req = requests.get(fattempt,verify=False)
         if req.status_code == 200:
-            if 'error' in req.text or 'SQL' in req.text or 'syntax' in req.text:
+            if 'error' in req.text or 'SQL' in req.text or 'syntax' in req.text or 'PDOException' in req.text or 'SQLSTATE[' in req.text:
                 #print(req.text)
                 return "SQL INJECTION"
             else:
@@ -245,10 +261,10 @@ class Scanner:
                 return "SSRF(Server Side Request Forgery)"
             elif 'root' in req2.text or 'root:x:' in req2.text or 'root:!:' in req2.text:
                 return "SSRF(Server Side Request Forgery)"
-            elif 'phpmyadmin' in req3.text or 'password' in req3.text:
-                return "SSRF(Server Side Request Forgery)"
-            elif 'AdminLTE' in req4.text or 'password' in req4.text or 'username' in req4.text or 'login' in req4.text:
-                return "SSRF(Server Side Request Forgery)"
+            #elif 'phpmyadmin' in req3.text or 'password' in req3.text:
+            #    return "SSRF(Server Side Request Forgery)"
+            #elif 'AdminLTE' in req4.text or 'password' in req4.text or 'username' in req4.text or 'login' in req4.text:
+            #   return "SSRF(Server Side Request Forgery)"
             else:
                 return ""
         else:
