@@ -33,7 +33,7 @@ class Scanner:
     def domain_information(self,url):
         domain = urlparse(url).netloc
         ip = socket.gethostbyname(domain)
-        IP_INFO_API = "bd9a656f7652f9"
+        IP_INFO_API = "bd9a656f7652f9" # add your API key here
         host = f"https://ipinfo.io/{ip}?token={IP_INFO_API}"
         headers = {
             'Content-Type':'application/json'
