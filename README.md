@@ -62,6 +62,7 @@ Below are the vulnerabilities that can be tested currently:
 4. OS Command Injection
 5. LFI (Local File Inclusion)
 6. SQL injection
+7. SSRF (Server Side Request Forgery)
 
 More Vulnerability testing functions will be added soon:)
 
