@@ -1,5 +1,6 @@
 from Wappalyzer import Wappalyzer, WebPage
 from urllib.parse import urlparse
+import dns.resolver
 import requests
 import vulners
 import base64
@@ -18,6 +19,8 @@ class Scanner:
             "vuln": self.scan_for_vuln(url),
             "server_version": self.scan_for_server_version(url),
             "domain_information": self.domain_information(url),
+            "port_discovery": self.port_discovery(url),
+            "dns_record": self.dns_record(url),
             "request_tamp": self.request_tamp(url),
             "exploit_info": self.exploit_info(url),
             "mitigation_info": self.mitigation_info(url)
@@ -33,7 +36,7 @@ class Scanner:
     def domain_information(self,url):
         domain = urlparse(url).netloc
         ip = socket.gethostbyname(domain)
-        IP_INFO_API = "bd9a656f7652f9" # add your API key here
+        IP_INFO_API = "bd9a656f7652f9"
         host = f"https://ipinfo.io/{ip}?token={IP_INFO_API}"
         headers = {
             'Content-Type':'application/json'
@@ -42,6 +45,29 @@ class Scanner:
         info = json.dumps(req.json())
 
         return info
+
+    def port_discovery(self,url):
+        domain = urlparse(url).netloc
+        ip = socket.gethostbyname(domain)
+        for port in range(20,65535):
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            socket.setdefaulttimeout(1)
+            result = s.connect_ex((ip,port))
+            if result == 0:
+                return f"Port {port} - Open"
+            s.close()
+
+    def dns_record(self,url):
+        domain = urlparse(url).netloc
+            
+        A_RECORD = dns.resolver.query(domain,'A')
+
+        for val in A_RECORD:
+            data = json.dumps({
+                'A RECORD': val.to_text()
+            })
+
+            return data
 
     def scan_for_vuln(self, url):
         test1 = Scanner.test_xss(url)
@@ -258,9 +284,9 @@ class Scanner:
         req4 = requests.get(ftattempt,verify=False)
         if req1.status_code == 200 or req2.status_code == 200 or req3.status_code == 200 or req4.status_code == 200:
             if 'root' in req1.text or 'root:x:' in req1.text or 'root:!:' in req1.text:
-                return "SSRF(Server Side Request Forgery)"
+                return "SSRF(Server Side Request Forgery) - file"
             elif 'root' in req2.text or 'root:x:' in req2.text or 'root:!:' in req2.text:
-                return "SSRF(Server Side Request Forgery)"
+                return "SSRF(Server Side Request Forgery) - file"
             #elif 'phpmyadmin' in req3.text or 'password' in req3.text:
             #    return "SSRF(Server Side Request Forgery)"
             #elif 'AdminLTE' in req4.text or 'password' in req4.text or 'username' in req4.text or 'login' in req4.text:
