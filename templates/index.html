@@ -50,16 +50,24 @@
               <td class="text-danger">{{ check_result["domain_information"]}}</td>
             </tr>
             <tr>
-              <td>[5] Request Tampering</td>
+              <td>[5] Ports Discovered</td>
+              <td class="text-danger">{{ check_result["port_discovery"]}}</td>
+            </tr>
+            <tr>
+              <td>[6] DNS Records</td>
+              <td class="text-danger">{{ check_result["dns_record"]}}</td>
+            </tr>
+            <tr>
+              <td>[7] Request Tampering</td>
               <td class="text-danger">{{ check_result["request_tamp"]}}</td>
             </tr>
             <tr>
-              <td>[6] Exploit Information</td>
+              <td>[8] Exploit Information</td>
               <td class="text-danger">{{ check_result["exploit_info"]}}</td>
               <td></td>
             </tr>
             <tr>
-              <td>[7] Mitigation</td>
+              <td>[9] Mitigation</td>
               <td class="text-danger">{{ check_result["mitigation_info"]}}</td>
             </td>
             </tr>
