@@ -6,7 +6,8 @@ def build_main_blueprint(app):
 
     main = Blueprint('main', __name__)
     scanner_config = {
-        "v_key": app.config['VULN_KEY']
+        "v_key": app.config['VULN_KEY'],
+        "s_key": app.config['SHODAN_API_KEY']
     }
     scanner = Scanner(scanner_config)
 
@@ -22,7 +23,6 @@ def build_main_blueprint(app):
 
         return render_template("index.html", check_result=check_result)
 
-
     @main.route("/output", methods=["GET"])
     @login_required
     def output():
@@ -30,6 +30,15 @@ def build_main_blueprint(app):
             read = exploitResult.readlines()
             read = jsonify(read)
             
+            return read
+
+    @main.route("/domain",methods=["GET"])
+    @login_required
+    def domain():
+        with open("output_domain_info.json","r") as domainInfo:
+            read = domainInfo.readlines()
+            read = jsonify(read)
+
             return read
     
     return (main)
