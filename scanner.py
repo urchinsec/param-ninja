@@ -1,6 +1,6 @@
 from Wappalyzer import Wappalyzer, WebPage
 from urllib.parse import urlparse , quote_plus
-import dns.resolver
+#import dns.resolver
 import requests
 import vulners
 import shodan
@@ -72,14 +72,28 @@ class Scanner:
     def dns_record(self,url):
         domain = urlparse(url).netloc
             
-        A_RECORD = dns.resolver.query(domain,'A')
+        """A_RECORD = dns.resolver.query(domain,'A')
 
         for val in A_RECORD:
             data = json.dumps({
                 'A RECORD': val.to_text()
             })
 
-            return data
+            return data"""
+        WKey = self.params['w_key']
+        WApi = f"https://www.whoisxmlapi.com/whoisserver/DNSService?api_key={WKey}&domainName={domain}&type=_all&outputFormat=JSON"
+
+        req = requests.get(WApi)
+
+        if req.status_code == 200:
+            os.system('touch dnsrecord.json')
+            with open('dnsrecord.json','w') as dnsrecord:
+                data = json.dumps(req.json(),indent=2)
+                dnsrecord.writelines(data)
+
+                return "Visit /dnsrecords"
+        else:
+            return "Something Went Wrong While Fetching DNS Records"
 
     def scan_for_vuln(self, url):
         test1 = Scanner.test_xss(url)
