@@ -58,12 +58,19 @@
               <td class="text-danger">{{ check_result["dns_record"]}}</td>
             </tr>
             <tr>
-              <td>[7] Exploit Information</td>
-              <td class="text-danger">{{ check_result["exploit_info"]}}</td>
-              <td></td>
+              <td>[7] Suspicious Directories</td>
+              <td class="text-danger">{{ check_result["scan_files"]}}</td>
             </tr>
             <tr>
-              <td>[8] Mitigation</td>
+              <td>[8] Subdomain Enumeration</td>
+              <td class="text-danger">{{ check_result["subdomain_scan"]}}</td>
+            </tr>
+            <tr>
+              <td>[9] Exploit Information</td>
+              <td class="text-danger">{{ check_result["exploit_info"]}}</td>
+            </tr>
+            <tr>
+              <td>[10] Mitigation</td>
               <td class="text-danger">{{ check_result["mitigation_info"]}}</td>
             </td>
             </tr>
