@@ -1,5 +1,5 @@
 from Wappalyzer import Wappalyzer, WebPage
-from urllib.parse import urlparse
+from urllib.parse import urlparse , quote_plus
 import dns.resolver
 import requests
 import vulners
@@ -22,6 +22,8 @@ class Scanner:
             "domain_information": self.domain_information(url),
             "port_discovery": self.port_discovery(url),
             "dns_record": self.dns_record(url),
+            "scan_files": self.scan_files(url),
+            "subdomain_scan": self.subdomain_scan(url),
             "exploit_info": self.exploit_info(url),
             "mitigation_info": self.mitigation_info(url)
         }
@@ -56,7 +58,15 @@ class Scanner:
             socket.setdefaulttimeout(1)
             result = s.connect_ex((ip,port))
             if result == 0:
-                return f"Port {port} - Open"
+                os.sytem('touch ports_opened.txt')
+                with open('ports_opened.txt','w') as ports:
+                    write = f'Port - {port} - Opened'
+                    ports.writelines(write)
+                # reading the file with ports result
+                with open('ports_opened.txt','r') as ports:
+                    read = ports.read()
+                    read = read.splitlines()
+                    return read
             s.close()
 
     def dns_record(self,url):
@@ -131,10 +141,7 @@ class Scanner:
         reqssti = requests.get(f"{url}{payloadssti}",verify=False)
         reqhtmli = requests.get(f"{url}{payloadhtmli}",verify=False)
 
-        if "xss" in reqxss.text and "49" in reqssti.text and "htmlinjection" in reqhtmli.text:
-            return "SSTI,XSS, and HTMLinjection available can be prevented by reviewing the code and sanitizing the inputs"
-        else:
-            return "Check Through The Output"
+        return "View /output"
 
     def test_ssti(url):
         payload1 = "{{7*'7'}}"
@@ -235,16 +242,19 @@ class Scanner:
         payload1 = "; echo 'aGVsbG8K'|base64 -d;"
         payload2 = "\necho 'aGVsbG8K'|base64 -d;"
         payload3 = "@(1000+337)"
+        payload4 = "system('echo aGVsbG8K|base64 -d')"
         fattempt = f"{url}{payload1}"
         sattempt = f"{url}{payload2}"
         tattempt = f"{url}{payload3}"
+        ftattempt = f"{url}{payload4}"
 
         req1 = requests.get(fattempt,verify=False)
         req2 = requests.get(sattempt,verify=False)
         req3 = requests.get(tattempt,verify=False)
+        req4 = requests.get(ftattempt,verify=False)
 
-        if req1.status_code == 200 and req2.status_code == 200 and req3.status_code == 200:
-            if 'hello' in req1.text or 'hello' in req2.text:
+        if req1.status_code == 200 and req2.status_code == 200 and req3.status_code == 200 and req4.status_code == 200:
+            if 'hello' in req1.text or 'hello' in req2.text or 'hello' in req4.text:
                 return "OS Command Injection"
             elif '1337' in req3.text:
                 return "OS Command Injection"
@@ -254,35 +264,44 @@ class Scanner:
             return ""
 
     def test_lfi(url):
+        # declaring payloads
         payload1 = "../../../../../../../../../../etc/passwd"
         payload2 = "/etc/passwd"
         payload3 = base64.b64encode(payload2.encode('utf-8'))
         payload3 = str(payload3,'utf-8')
         payload4 = base64.b64encode(payload1.encode('utf-8'))
         payload4 = str(payload4,'utf-8')
+        payload5 = quote_plus(payload1)
+        payload6 = quote_plus(payload2)
+        # declaring full URL
         fattempt = f"{url}{payload1}"
         sattempt = f"{url}{payload2}"
         tattempt = f"{url}{payload3}"
         ftattempt = f"{url}{payload4}"
+        fhattempt = f"{url}{payload5}"
+        sxattempt = f"{url}{payload6}"
+        # sending requests and checking vulnerability status
         req1 = requests.get(fattempt,verify=False)
         req2 = requests.get(sattempt,verify=False)
         req3 = requests.get(tattempt,verify=False)
         req4 = requests.get(ftattempt,verify=False)
+        req5 = requests.get(fhattempt,verify=False)
+        req6 = requests.get(sxattempt,verify=False)
         #print(req.text)
-        if req1.status_code == 200 or req2.status_code == 200 or req3.status_code == 200 or req4.status_code == 200:
-            if 'root' in req1.text or 'root' in req2.text or 'root' in req3.text or 'root' in req4.text:
+        if req1.status_code == 200 or req2.status_code == 200 or req3.status_code == 200 or req4.status_code == 200 or req5.status_code == 200 or req6.status_code == 200:
+            if 'root' in req1.text or 'root' in req2.text or 'root' in req3.text or 'root' in req4.text or 'root' in req5.text or 'root' in req6.text:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
         else:
-            if 'root:x:' in req1.text or 'root:x:' in req2.text or 'root:x:' in req3.text or 'root:x:' in req4.text:
+            if 'root:x:' in req1.text or 'root:x:' in req2.text or 'root:x:' in req3.text or 'root:x:' in req4.text or 'root:x:' in req5.text or 'root:x:' in req6.text:
                 return "LFI(Local File Inclusion)"
             else:
                 return ""
 
     def test_dtraversal(url):
-        payload1 = "/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/.%252e/etc/passwd"
-        payload2 = "/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/etc/passwd"
+        payload1 = quote_plus(quote_plus("/../../../../../../../../../../etc/passwd"))
+        payload2 = quote_plus(quote_plus("/\//\..\/..\/..\/..\/..\/..\/..\/..\/..\/etc/passwd"))
         fattempt = f"{url}{payload1}"
         sattempt = f"{url}{payload2}"
         req1 = requests.get(fattempt)
@@ -321,3 +340,99 @@ class Scanner:
                 return ""
         else:
             return ""
+
+    def check_gitfiles(url):
+        domain = urlparse(url).netloc
+        scheme = urlparse(url).scheme
+        full = f"{scheme}://{domain}/.git"
+        req = requests.get(full)
+        if req.status_code == 200:
+            return ".git"
+        else:
+            return ""
+
+    """
+    Just another function to perform a dictionary
+    attack on the URL upon the directories and discover
+    suspicious files
+    """
+    def scan_files(url):
+        wordlist = open("dir-wordlist.txt","r")
+        lines = wordlist.readlines()
+        for line in lines:
+            domain = urlparse(url).netloc
+            scheme = urlparse(url).scheme
+            ext_php = f"{line}.php"
+            ext_xml = f"{line}.xml"
+            ext_phar = f"{line}.phar"
+            ext_do = f"{line}.do"
+            ext_zip = f"{line}.zip"
+            ext_db = f"{line}.db"
+            ext_none = f"{line}"
+            # declaring the names to each URL
+            scan1 = f"{scheme}://{domain}/{ext_php}"
+            scan2 = f"{scheme}://{domain}/{ext_xml}"
+            scan3 = f"{scheme}://{domain}/{ext_phar}"
+            scan4 = f"{scheme}://{domain}/{ext_do}"
+            scan5 = f"{scheme}://{domain}/{ext_zip}"
+            scan6 = f"{scheme}://{domain}/{ext_db}"
+            scan7 = f"{scheme}://{domain}/{ext_none}"
+            # sending requests to each URL
+            req1 = requests.get(scan1)
+            req2 = requests.get(scan2)
+            req3 = requests.get(scan3)
+            req4 = requests.get(scan4)
+            req5 = requests.get(scan5)
+            req6 = requests.get(scan6)
+            req7 = requests.get(scan7)
+            # checking existence using status_code
+            if req1.status_code == 200:
+                return f"{ext_php}"
+            elif req2.status_code == 200:
+                return f"{ext_xml}"
+            elif req3.status_code == 200:
+                return f"{ext_phar}"
+            elif req4.status_code == 200:
+                return f"{ext_do}"
+            elif req5.status_code == 200:
+                return f"{ext_zip}"
+            elif req6.status_code == 200:
+                return f"{ext_db}"
+            elif req7.status_code == 200:
+                return f"{ext_none}"
+    """
+    def subdomain_scan(url):
+        domain = urlparse(url).netloc
+        scheme = urlparse(url).scheme
+        with open("subdomains.txt","r") as wordlist:
+            name = wordlist.read()
+            subdomain = name.splitlines()
+            for subdom in subdomain:
+                URL = f"{scheme}://{subdom}.{domain}"
+                try:
+                    req = requests.get(URL)
+                    if req.status_code == 200:
+                        os.system('touch subdomains_found.txt')
+                        with open("subdomains_found.txt","w") as output:
+                            output.writelines(f'{URL}')
+                        with open("subdomains_found.txt","r") as output:
+                            read = output.read()
+                            read = read.splitlines()
+                            return read
+                except requests.ConnectionError:
+                    pass
+    """
+    def subdomain_scan(self,url):
+        domain = urlparse(url).netloc
+        WKey = self.params["w_key"]
+        WApi = f"https://subdomains.whoisxmlapi.com/api/v2?apiKey={WKey}&domainName={domain}"
+        # sending requests
+        req = requests.get(WApi)
+        if req.status_code == 200:
+            output = req.json()['result']
+            os.system('touch sbdomains.json')
+            with open('sbdomains.json','w') as res:
+                res.writelines(output)
+                return 'Visit /subdomains'
+        else:
+            return 'Something Went Wrong While Enumerating!'
