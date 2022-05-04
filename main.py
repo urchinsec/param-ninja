@@ -50,5 +50,14 @@ def build_main_blueprint(app):
             read = jsonify(read)
 
             return read
+
+    @main.route("/dnsrecords",methods=["GET"])
+    @login_required
+    def dnsrecords():
+        with open("dnsrecord.json","r") as dnsrecords:
+            read = dnsrecords.readlines()
+            read = jsonify(read)
+
+            return read
     
     return (main)
