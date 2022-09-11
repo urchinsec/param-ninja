@@ -14,14 +14,9 @@ You need to create a `config` file and put in your secret key and SQLAlchemy URL
 ```
 SECRET_KEY = 'somesecretgoesherepewpew333'
 SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
-```
-
-Visit https://vulners.com/ and generate an API key and then add it in the config also:
-
-```
-SECRET_KEY = 'somesecretgoesherepewpew333'
-SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 VULN_KEY = 'keyhere'
+SHODAN_API_KEY = 'keyhere'
+WHOISXMLAPI_KEY = 'keyhere'
 ```
 
 ## USAGE
@@ -49,8 +44,12 @@ This is an example of scanning `https://api.github.com/users` but it's  best you
 
 ![Scanned](https://user-images.githubusercontent.com/49201347/157249666-b6e0add1-ef2f-4f2e-ba9f-c9b55e862ee7.png)
 
+**We have a new tab which is `Post Based`, and it's underdevelopment.**
+
 ## WHAT'S MORE?
 You can visit `/output` to check the output of possible exploits found from exploit-db.
+You can visit `/subdomains` to check the output of subdomains available under the domain provided at first.
+You can visit `/domain` to get information about the domain hosting the web application.
 
 **FUNCTIONALITIES::**
 
@@ -63,12 +62,25 @@ Below are the vulnerabilities that can be tested currently:
 5. LFI (Local File Inclusion)
 6. SQL injection
 7. SSRF (Server Side Request Forgery)
+8. Directory Traversal
+9. Open Redirection
+10. Anonymous FTP Login (if exists an FTP Service)
 
 More Vulnerability testing functions will be added soon:)
 
+The tool performs 10 core functions as of now, and these are:
+
+1. Determine Technologies Used
+2. Find Vulnerabilities
+3. Check Web Server Type
+4. Get Domain Information
+5. Perform Ports Enumeration
+6. Pull DNS Records
+7. Get Suspicious Directories
+8. Perform Subdomain Enumeration
+9. Provide Exploit Information Upon Technologies Used
+10. Provide Mitigation Information Accordingly To The Exploits
+
 ## CONTACTS::
 1. urchinsec@protonmail.com
-2. tahacodez@gmail.com
-3. bug.fetcher@gmail.com
-4. [tahaafarooq](https://twitter.com/tahaafarooq)
-5. [DmitryMineev](https://twitter.com/Dmitry_Mineev)
+2. [urchinsec](https://twitter.com/urchinsec_)
