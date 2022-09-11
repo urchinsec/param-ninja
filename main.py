@@ -69,9 +69,8 @@ def build_main_blueprint(app):
     def lfi_results():
         with open("lfi_proof.html", "r") as lfi_proof:
             read = lfi_proof.readlines()
-            
-        os.system('mv lfi_proof.html templates/lfi_proof.html')
-        return render_template('lfi_proof.html')
+
+            return read
 
     @main.route("/oscmdi", methods=["GET"])
     @login_required
