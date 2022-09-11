@@ -136,9 +136,9 @@ class Scanner:
             'Content-Type': 'application/json'
         }
 
-        req_TXT = requests.post(WApi, headers=headers, data=data_TXT)
-        req_CNAME = requests.post(WApi, headers=headers, data=data_CNAME)
-        req_SOA = requests.post(WApi, headers=headers, data=data_SOA)
+        req_TXT = requests.post(WApi, headers=headers, data=data_TXT, verify=False)
+        req_CNAME = requests.post(WApi, headers=headers, data=data_CNAME, verify=False)
+        req_SOA = requests.post(WApi, headers=headers, data=data_SOA, verify=False)
 
         if req_TXT.status_code == 200 and req_CNAME.status_code == 200 and req_SOA.status_code == 200:
             res_TXT = json.dumps(req_TXT.json())
@@ -173,7 +173,7 @@ class Scanner:
         return f"{test1} , {test2} , {test3}, {test4}, {test5}, {test6}, {test7}, {test8}, {test9} , {test10}"
 
     def scan_for_server_version(self, url):
-        req = requests.get(url)
+        req = requests.get(url, verify=False)
         headers = req.headers
         server = headers['Server']
 
@@ -344,7 +344,7 @@ class Scanner:
             if 'hello' in req1.text or 'hello' in req2.text or 'hello' in req4.text:
                 payload = "; cat /etc/passwd"
                 full = f"{url}{payload}"
-                req = requests.get(full)
+                req = requests.get(full, verify=False)
                 with open("os_cmdi_proof.html", "w") as oscmdi_proof:
                     oscmdi_proof.writelines(req.text)
                 return "OS Command Injection"
@@ -353,10 +353,10 @@ class Scanner:
             else:
                 return ""
         elif req5.status_code == 200:
-            if 'pewpewpew' in req.text:
+            if 'pewpewpew' in req5.text:
                 payload = ";cat /etc/passwd"
                 full = f"{url}{payload}"
-                req = requests.get(full)
+                req = requests.get(full, verify=False)
                 with open("os_cmdi_proof.html", "w") as oscmdi_proof:
                     oscmdi_proof.writelines(req.text)
                 return "OS Command Injection"
@@ -410,8 +410,8 @@ class Scanner:
         payload2 = quote_plus(quote_plus("/\//\..\/..\/..\/..\/..\/..\/..\/..\/..\/etc/passwd"))
         fattempt = f"{url}{payload1}"
         sattempt = f"{url}{payload2}"
-        req1 = requests.get(fattempt)
-        req2 = requests.get(sattempt)
+        req1 = requests.get(fattempt, verify=False)
+        req2 = requests.get(sattempt, verify=False)
         if req1.status_code == 200 and req2.status_code == 200:
             if 'root:x:' in req1.text or 'root:x:' in req2.text:
                 return 'Directory Path Traversal'
@@ -456,9 +456,9 @@ class Scanner:
         sattempt = f"{url}{spayload}"
         tattempt = f"{url}{tpayload}"
 
-        req1 = requests.get(fattempt)
-        req2 = requests.get(sattempt)
-        req3 = requests.get(tattempt)
+        req1 = requests.get(fattempt, verify=False)
+        req2 = requests.get(sattempt, verify=False)
+        req3 = requests.get(tattempt, verify=False)
 
         if req1.status_code == 200 or req1.status_code == 302 and req2.status_code == 200 or req2.status_code == 302 and req3.status_code == 200 or req3.status_code == 302:
             if 'pewpew' in req1.text or 'pewpew' in req2.text or 'pewpew' in req3.text:
@@ -472,9 +472,9 @@ class Scanner:
         domain = urlparse(url).netloc
         scheme = urlparse(url).scheme
         full = f"{scheme}://{domain}/.git"
-        req = requests.get(full)
+        req = requests.get(full, verify=False)
         if req.status_code == 200:
-            return ".git"
+            return f"{full} Found"
         else:
             return ""
 
@@ -487,30 +487,32 @@ class Scanner:
     def scan_files(self, url):
         wordlist = open("dir-wordlist.txt", "r")
         lines = wordlist.readlines()
+        chk_git = Scanner.check_gitfiles(url)
         for line in lines:
             domain = urlparse(url).netloc
             scheme = urlparse(url).scheme
             full = f"{scheme}://{domain}/{line}"
-            req = requests.get(full)
+            req = requests.get(full, verify=False)
             if req.status_code == 200:
                 return "Found {line}"
             else:
-                return "Nothing Suspicious Found"
+                return f"Nothing Suspicious Found | {chk_git}"
 
     def enum_files(self, url):
         wordlist = open("files-wordlist.txt", "r")
         lines = wordlist.readlines()
+        chk_git = Scanner.check_gitfiles(url)
         for line in lines:
             scheme = urlparse(url).scheme
             domain = urlparse(url).netloc
             full = f"{scheme}://{domain}/{line}"
-            req = requests.get(full)
+            req = requests.get(full, verify=False)
             if req.status_code == 200:
-                with open("found_files.txt", "wa") as found:
+                with open("found_files.txt", "w") as found:
                     found.writelines(line)
                 return "Visit /suspicious"
             else:
-                return "Nothing Suspicious"
+                return f"Nothing Suspicious | {chk_git}"
 
     """
     def subdomain_scan(self,url):
@@ -544,13 +546,13 @@ class Scanner:
         if req.status_code != 200:
             return 'Unable to fetch Subdomains from this domain'
 
-        for (key,value) in enumerate(req.json()):
+        for (key, value) in enumerate(req.json()):
             subdomains.append(value['name_value'])
 
         subs = sorted(set(subdomains))
         for s in subs:
             if output is not None:
-                Scanner.write_to_file_subs(s,output)
+                Scanner.write_to_file_subs(s, output)
 
         return "Visit /subdomains"
 
@@ -558,6 +560,7 @@ class Scanner:
         with open(output_file, 'w') as file:
             file.write(str(subdomain))
             file.close()
+
 
 class PostScanner:
     def __init__(self, params):
