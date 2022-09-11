@@ -44,6 +44,11 @@ This is an example of scanning `https://api.github.com/users` but it's  best you
 
 ![Scanned](https://user-images.githubusercontent.com/49201347/157249666-b6e0add1-ef2f-4f2e-ba9f-c9b55e862ee7.png)
 
+Another Example:
+
+![image](https://user-images.githubusercontent.com/49201347/189547596-5b8a22d0-6d89-4374-aab9-b6048eaff54e.png)
+
+
 **We have a new tab which is `Post Based`, and it's underdevelopment.**
 
 ## WHAT'S MORE?
