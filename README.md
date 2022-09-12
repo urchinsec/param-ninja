@@ -19,6 +19,8 @@ SHODAN_API_KEY = 'keyhere'
 WHOISXMLAPI_KEY = 'keyhere'
 ```
 
+You can generate your Shodan API from shodan's official website , and vulners from https://vulners.com , whoisxmlapi from https://whoisxmlapi.com
+
 ## USAGE
 Now to finally run it up :
 
