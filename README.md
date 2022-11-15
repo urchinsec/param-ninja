@@ -1,4 +1,4 @@
-# PARAM-NINJA
+[<img src="param-ninja-logo.png" width="150"/>](param-ninja-logo.png)
 An automated penetration testing tool , that automates web vulnerabilities testing upon a URL given with a parameter
 
 ## INSTALLATION
@@ -91,3 +91,5 @@ The tool performs 10 core functions as of now, and these are:
 ## CONTACTS::
 1. urchinsec@protonmail.com
 2. [urchinsec](https://twitter.com/urchinsec_)
+
+*LOGO ArtWork By [witchdocsec](https://github.com/witchdocsec/)*
