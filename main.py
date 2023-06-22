@@ -34,9 +34,15 @@ def build_main_blueprint(app):
     @main.route("/check", methods=["POST"])
     @login_required
     def check_url():
-        check_result = scanner.full_scan(request.form["url"])
+        url = request.form["url"] # url goes here
+        blacklisted_inps = ["127.0.0.1", "localhost", "0.0.0.0", "[::]", "0000::1", "127.127.127.127", "127.0.1.3", "127.0.0.0", "2130706433", "3232235521", "3232235521", "2852039166", "169.254.169.254", "192.168.1.1", "192.168.0.1", "0177.0.0.1", "o177.0.0.1", "0o177.0.0.1", "q177.0.0.1", "[0:0:0:0:0:ffff:127.0.0.1]", "[::ffff:127.0.0.1]", "localhost:+11211aaa", "localhost:00011211aaaa", "0", "127.1", "127.0.1", "file:///", "smb:///", "telnet:///", "ftp:"]
+        for word in blacklisted_inps:
+            if word in url:
+                return render_template("index.html", check_results="MALICIOUS ATTEMPT!")
+            else:
+                check_result = scanner.full_scan(url)
 
-        return render_template("index.html", check_result=check_result)
+                return render_template("index.html", check_result=check_result)
 
     @main.route("/output", methods=["GET"])
     @login_required
