@@ -89,7 +89,7 @@ The tool performs 10 core functions as of now, and these are:
 10. Provide Mitigation Information Accordingly To The Exploits
 
 ## CONTACTS::
-1. urchinsec@protonmail.com
+1. info@urchinsec.com
 2. [urchinsec](https://twitter.com/urchinsec_)
 
 *LOGO ArtWork By [witchdocsec](https://github.com/witchdocsec/)*
