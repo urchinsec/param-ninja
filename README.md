@@ -1,4 +1,6 @@
 [<img src="param-ninja-logo.png" width="150"/>](param-ninja-logo.png)
+
+[![Made in Tanzania](https://img.shields.io/badge/made%20in-tanzania-008751.svg?style=flat-square)](https://github.com/Tanzania-Developers-Community/made-in-tanzania)
 An automated penetration testing tool , that automates web vulnerabilities testing upon a URL given with a parameter
 
 ## INSTALLATION
