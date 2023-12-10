@@ -45,7 +45,7 @@ def register():
             return redirect(url_for('auth.login'))
         else:
             hash_password = generate_password_hash(password, method="pbkdf2:sha256")
-            push_new_user = User(email, password, username)
+            push_new_user = User(email, hash_password, username)
             db.session.add(push_new_user)
             db.session.commit()
 
