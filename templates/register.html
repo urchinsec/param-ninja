@@ -1,10 +1,10 @@
-{% set page_title = 'Login' %}
-{% set current_page = 'login' %}
+{% set page_title = 'Register' %}
+{% set current_page = 'register' %}
 
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1 class="text-center">Login</h1>
+  <h1 class="text-center">Register</h1>
   <div class="container">
     <div class="row">
       <div class="col-12">
@@ -23,9 +23,14 @@
     <div class="row justify-content-md-center">
       <div class="col-sm-1"></div>
       <div class="col-sm-auto">
-        <form class="form" action="login" method="post">
+        <form class="form" action="register" method="post">
           <div class="form-group">
             <label>Username:</label>
+            <input class="form-control" type="text" name="username">
+          </div>
+
+          <div class="form-group">
+            <label>Email:</label>
             <input class="form-control" type="text" name="email">
           </div>
 
