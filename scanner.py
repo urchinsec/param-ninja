@@ -1,5 +1,6 @@
 from Wappalyzer import Wappalyzer, WebPage
 from urllib.parse import urlparse, quote_plus
+from shodan import APIError
 # import dns.resolver
 import requests
 import vulners
@@ -37,18 +38,21 @@ class Scanner:
         return res
 
     def domain_information(self, url):
-        domain = urlparse(url).netloc
-        ip = socket.gethostbyname(domain)
+        try:
+            domain = urlparse(url).netloc
+            ip = socket.gethostbyname(domain)
 
-        SKey = self.params['s_key']
-        SApi = shodan.Shodan(SKey)
+            SKey = self.params['s_key']
+            SApi = shodan.Shodan(SKey)
 
-        info = json.dumps(SApi.host(ip))
+            info = json.dumps(SApi.host(ip))
 
-        with open('output_domain_info.json', 'w') as domainInfo:
-            domainInfo.writelines(info)
+            with open('output_domain_info.json', 'w') as domainInfo:
+                domainInfo.writelines(info)
 
-        return 'Visit /domain'
+            return 'Visit /domain'
+        except APIError as e:
+            return 'Unfortunately, Your Shodan Key Returned An Error'
 
     def anonymous_ftp_login(url):
         domain = urlparse(url).netloc
@@ -448,9 +452,9 @@ class Scanner:
             return ""
 
     def test_openredirection(url):
-        fpayload = "&next=tahaafarooq.me"
-        spayload = "&next=https://tahaafarooq.me"
-        tpayload = "https://tahaafarooq.me/"
+        fpayload = "&next=tahaafarooq.dev"
+        spayload = "&next=https://tahaafarooq.dev"
+        tpayload = "https://tahaafarooq.dev/"
 
         fattempt = f"{url}{fpayload}"
         sattempt = f"{url}{spayload}"
