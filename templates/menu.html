@@ -3,7 +3,7 @@
   <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
     <label class="m-3">PARAM NINJA</label>
 
-      {% if current_page != 'login' %}
+      {% if current_page != 'login' and current_page != 'register' %}
           <ul class="navbar-nav nav-tabs mr-auto">
               <li class="nav-item">
                   <a class="nav-link {{ 'active' if current_page == 'index' }}" href="/">Main</a>

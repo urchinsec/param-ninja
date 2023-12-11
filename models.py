@@ -38,6 +38,7 @@ class ReportLog(db.Model):
     domain = db.Column(db.String())
     username = db.Column(db.String())
     report_path = db.Column(db.String())
+    report_time = db.Column(db.String())
 
     def __init__(self, domain, username, report_path):
         self.domain = domain
