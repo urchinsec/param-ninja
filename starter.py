@@ -2,9 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
+from models import db
 
 # init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 if __name__ == "__main__":
     app = Flask(__name__)
@@ -14,6 +15,9 @@ if __name__ == "__main__":
     app.config.from_pyfile('config')
 
     db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
 
     # Login manager
     login_manager = LoginManager()
